@@ -1,26 +1,26 @@
-name: Provision EKS
+provider "aws" {
+  region = "us-east-1"
+}
 
-on:
-  push:
-    branches:
-      - master
-  workflow_dispatch:
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  name = "my-vpc"
+  cidr = "10.0.0.0/16"
+}
 
-jobs:
-  terraform:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = "my-cluster"
+  cluster_version = "1.21"
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = ["subnet-002f2e053f0ef7400"]  # Provided subnet
 
-      - name: Initialize Terraform
-        run: terraform init
-
-      - name: Validate Terraform
-        run: terraform validate
-
-      - name: Apply Terraform
-        run: terraform apply -auto-approve terraform/
+  node_groups = {
+    my_group = {
+      desired_capacity = 2
+      max_capacity     = 3
+      min_capacity     = 1
+      instance_type    = "m5.large"
+    }
+  }
+}
