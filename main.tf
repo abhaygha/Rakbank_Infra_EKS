@@ -15,13 +15,13 @@ module "eks" {
   vpc_id          = module.vpc.vpc_id
   subnet_ids      = ["subnet-002f2e053f0ef7400"]  # Provided subnet
 
-  node_groups = [
-    {
-      name          = "my-group"
-      instance_type = "m5.large"
+  node_groups = {
+    my_group = {
       desired_capacity = 2
       max_capacity     = 3
       min_capacity     = 1
+
+      instance_type = "m5.large"
     }
-  ]
+  }
 }
