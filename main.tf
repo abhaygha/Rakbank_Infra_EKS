@@ -2,35 +2,26 @@ provider "aws" {
   region = "us-east-1"
 }
 
-# Create VPC
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
-  enable_dns_hostnames = true
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  name = "my-vpc"
+  cidr = "10.0.0.0/16"
 }
 
-# Create EKS Cluster
-module "eks_cluster" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "17.3.0"
-
-  cluster_name    = "your-eks-cluster-name"
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = "my-cluster"
   cluster_version = "1.21"
-
-  vpc_id = aws_vpc.main.id
+  subnets         = ["subnet-002f2e053f0ef7400"]  # Provided subnet
+  vpc_id          = "vpc-05b315a793fddc7f0"       # Provided VPC ID
 
   node_groups = {
-    eks_nodes = {
+    my_group = {
       desired_capacity = 2
       max_capacity     = 3
       min_capacity     = 1
 
-      instance_type = "t3.medium"
+      instance_type = "m5.large"
     }
   }
-
-  tags = {
-    Environment = "Production"
-  }
 }
-
