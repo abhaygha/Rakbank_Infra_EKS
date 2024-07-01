@@ -14,9 +14,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
+        uses: hashicorp/setup-terraform@v2  # Updated to v2 for the latest features
         with:
-          terraform_version: 1.5.6  # Ensure you use a specific version if necessary
+          terraform_version: 1.5.6  # Use the latest stable version or your required version
 
       - name: List files for debugging
         run: ls -l terraform  # Check if the directory and files are present
