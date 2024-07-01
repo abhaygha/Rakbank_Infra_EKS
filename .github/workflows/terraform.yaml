@@ -18,12 +18,12 @@ jobs:
 
       - name: Initialize Terraform
         working-directory: terraform
-        run: terraform init Infra-Pipeline-EKs
+        run: terraform init
 
       - name: Validate Terraform
         working-directory: terraform
-        run: terraform validate Infra-Pipeline-EKs
+        run: terraform validate
 
       - name: Apply Terraform
         working-directory: terraform
-        run: terraform apply -auto-approve Infra-Pipeline-EKs
+        run: terraform apply -auto-approve
