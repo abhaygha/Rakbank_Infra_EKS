@@ -1,0 +1,39 @@
+name: Terraform Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Configure AWS credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      # Initialize Terraform
+      - name: Initialize Terraform
+        run: terraform init
+
+      # Validate Terraform configuration
+      - name: Validate Terraform
+        run: terraform validate
+
+      # Plan Terraform changes
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+
+      # Apply Terraform changes
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
+
