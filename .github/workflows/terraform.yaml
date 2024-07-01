@@ -17,10 +17,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Initialize Terraform
-        run: terraform init terraform/
+        run: terraform init
 
       - name: Validate Terraform
-        run: terraform validate terraform/
+        run: terraform validate
 
       - name: Apply Terraform
         run: terraform apply -auto-approve terraform/
