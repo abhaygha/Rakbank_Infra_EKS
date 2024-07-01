@@ -15,11 +15,15 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.6  # Ensure you use a specific version if necessary
+
+      - name: List files for debugging
+        run: ls -l terraform  # Check if the directory and files are present
 
       - name: Initialize Terraform
         working-directory: terraform
-        run: |
-            ls -l && terraform init
+        run: terraform init
 
       - name: Validate Terraform
         working-directory: terraform
