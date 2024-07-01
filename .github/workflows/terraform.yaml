@@ -3,7 +3,7 @@ name: Provision EKS
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -17,10 +17,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
 
       - name: Initialize Terraform
-        run: terraform -chdir=terraform init
+        run: terraform init terraform/
 
       - name: Validate Terraform
-        run: terraform -chdir=terraform validate
+        run: terraform validate terraform/
 
       - name: Apply Terraform
-        run: terraform -chdir=terraform apply -auto-approve
+        run: terraform apply -auto-approve terraform/
