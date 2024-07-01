@@ -20,8 +20,7 @@ module "eks" {
       desired_capacity = 2
       max_capacity     = 3
       min_capacity     = 1
-
-      instance_type = "m5.large"
+      instance_type    = "m5.large"
     }
   }
 }
