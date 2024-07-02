@@ -24,7 +24,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::891377120087:role/github-role
+          role-to-assume: arn:aws:iam::891377120087:role/github-action-role
           aws-region: us-east-1
 
       - name: List files for debugging
