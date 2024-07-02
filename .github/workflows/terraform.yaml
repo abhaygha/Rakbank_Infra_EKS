@@ -9,6 +9,9 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -19,18 +22,10 @@ jobs:
           terraform_version: 1.5.6  # Use the latest stable version or your required version
 
       - name: Configure AWS Credentials
-        id: aws-creds
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-region: us-east-1
           role-to-assume: arn:aws:iam::891377120087:role/github-role
-          role-session-name: GitHubActionsSession
-
-      - name: Debug AWS Credentials
-        run: |
-          echo "AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
-          echo "AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY"
-          echo "AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN"
+          aws-region: us-east-1
 
       - name: List files for debugging
         run: ls -l terraform  # Check if the directory and files are present
