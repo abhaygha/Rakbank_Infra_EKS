@@ -10,7 +10,7 @@ jobs:
   terraform:
     runs-on: ubuntu-latest
     env:
-      TF_WORKSPACE: ${GITHUB_REF##*/}  # Set workspace based on branch name or any other identifier
+      TF_WORKSPACE: ${GITHUB_REF##*/}
 
     steps:
       - name: Checkout repository
@@ -19,7 +19,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.6  # Use the latest stable version or your required version
+          terraform_version: 1.5.6
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -27,10 +27,10 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: github-actions-session
           aws-region: ${{ secrets.AWS_REGION }}
-          role-external-id: ${{ secrets.AWS_EXTERNAL_ID }}  # Corrected input name
+          role-external-id: ${{ secrets.AWS_EXTERNAL_ID }}
 
       - name: List files for debugging
-        run: ls -l terraform  # Check if the directory and files are present
+        run: ls -l terraform
 
       - name: Initialize Terraform
         working-directory: terraform
