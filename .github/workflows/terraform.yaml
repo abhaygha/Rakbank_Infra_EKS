@@ -9,9 +9,6 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    env:
-      TF_WORKSPACE: ${GITHUB_REF##*/}  # Set workspace based on branch name or any other identifier
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -22,12 +19,12 @@ jobs:
           terraform_version: 1.5.6  # Use the latest stable version or your required version
 
       - name: Configure AWS Credentials
+        id: aws-creds
         uses: aws-actions/configure-aws-credentials@v1
         with:
+          aws-region: us-east-1
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-session-name: github-actions-session
-          aws-region: ${{ secrets.AWS_REGION }}
-          role-external-id: ${{ secrets.AWS_EXTERNAL_ID }}  # Corrected input name
+          role-session-name: GitHubActionsSession
 
       - name: List files for debugging
         run: ls -l terraform  # Check if the directory and files are present
@@ -36,12 +33,11 @@ jobs:
         working-directory: terraform
         run: terraform init
 
-      - name: Select or Create Terraform Workspace
+      - name: Select Terraform Workspace
         working-directory: terraform
-        run: |
-          terraform workspace list | grep -q "${TF_WORKSPACE}" \
-            && terraform workspace select "${TF_WORKSPACE}" \
-            || terraform workspace new "${TF_WORKSPACE}"
+        run: terraform workspace select ${WORKSPACE_NAME} || terraform workspace new ${WORKSPACE_NAME}
+        env:
+          WORKSPACE_NAME: default  # You can change this to the desired workspace name
 
       - name: Validate Terraform
         working-directory: terraform
