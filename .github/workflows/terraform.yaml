@@ -27,7 +27,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: github-actions-session
           aws-region: ${{ secrets.AWS_REGION }}
-          external-id: ${{ secrets.AWS_EXTERNAL_ID }}
+          role-external-id: ${{ secrets.AWS_EXTERNAL_ID }}  # Corrected input name
 
       - name: List files for debugging
         run: ls -l terraform  # Check if the directory and files are present
