@@ -9,6 +9,8 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    env:
+      TF_WORKSPACE: ${GITHUB_REF##*/}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -16,21 +18,28 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.6  # Use the latest stable version or your required version
+          terraform_version: 1.5.6
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: arn:aws:iam::767397671904:role/github-actions-role
+          role-session-name: github-actions-session
           aws-region: us-east-1
 
       - name: List files for debugging
-        run: ls -l terraform  # Check if the directory and files are present
+        run: ls -l terraform
 
       - name: Initialize Terraform
         working-directory: terraform
         run: terraform init
+
+      - name: Select or Create Terraform Workspace
+        working-directory: terraform
+        run: |
+          terraform workspace list | grep -q "${TF_WORKSPACE}" \
+            && terraform workspace select "${TF_WORKSPACE}" \
+            || terraform workspace new "${TF_WORKSPACE}"
 
       - name: Validate Terraform
         working-directory: terraform
