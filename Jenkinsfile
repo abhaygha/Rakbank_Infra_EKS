@@ -14,11 +14,15 @@ pipeline {
             }
         }
 
-        stage('Setup Terraform') {
+        stage('Install Terraform') {
             steps {
                 script {
-                    def terraformHome = tool name: 'Terraform', type: 'org.jenkinsci.plugins.terraform.TerraformInstallation'
-                    env.PATH = "${terraformHome}/bin:${env.PATH}"
+                    sh '''
+                    curl -Lo terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+                    unzip terraform.zip
+                    sudo mv terraform /usr/local/bin/
+                    terraform version
+                    '''
                 }
             }
         }
