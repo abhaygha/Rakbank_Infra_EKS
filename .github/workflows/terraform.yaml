@@ -3,7 +3,7 @@ name: Provision EKS
 on:
   push:
     branches:
-      - master
+      - testbranch
   workflow_dispatch:
 
 jobs:
